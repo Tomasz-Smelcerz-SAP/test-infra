@@ -41,7 +41,9 @@ if [ "${discoverUnsetVar}" = true ] ; then
 fi
 
 
-trap cleanup EXIT
+#Remember to configure enough time for graceful pod termination, otherwise cleanup won't complete on time anyway
+trap cleanup EXIT SIGINT SIGTERM
+
 
 #!Put cleanup code in this function!
 cleanup() {
@@ -146,52 +148,6 @@ shout "Authenticate"
 date
 init
 
-################################################################################
-sigquit()
-{
-    echo "signal SIGQUIT received"
-    while /bin/true ; do
-        sleep 5
-        echo "looping after SIGQUIT"
-        date
-    done
-    exit 0
-}
-
-sigint()
-{
-    echo "signal SIGINT received, script ending"
-    while /bin/true ; do
-        sleep 5
-        echo "looping after SIGINT"
-        date
-    done
-    exit 0
-}
-
-sigterm()
-{
-    echo "signal SIGTERM received, script ending"
-    while /bin/true ; do
-        sleep 5
-        echo "looping after SIGTERM"
-        date
-    done
-    exit 0
-}
-
-trap 'sigquit' SIGQUIT
-trap 'sigint'  SIGINT
-trap 'sigterm' SIGTERM
-
-echo "test script started. My PID is $$"
-while /bin/true ; do
-    echo "tick"
-    date
-    sleep 5
-done
-
-################################################################################
 
 shout "Build Kyma-Installer Docker image"
 date
