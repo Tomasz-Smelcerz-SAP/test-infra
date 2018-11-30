@@ -37,7 +37,7 @@ presubmits: # runs on PRs
         preset-dind-enabled: "true"
       decorate: true
       decoration_config:
-        grace_period: 1.8e+11 #three minutes
+        grace_period: 180000000000 #three minutes
       path_alias: github.com/kyma-project/kyma
       extra_refs:
         - org: kyma-project
