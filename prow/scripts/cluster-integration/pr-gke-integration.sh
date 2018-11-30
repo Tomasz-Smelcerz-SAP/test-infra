@@ -47,6 +47,8 @@ trap cleanup EXIT SIGINT SIGTERM
 
 #!Put cleanup code in this function!
 cleanup() {
+    echo DEBUG!!!
+
     #!!! Must be at the beginning of this function !!!
     EXIT_STATUS=$?
 
@@ -216,7 +218,8 @@ date
 shout "Trigger installation"
 date
 kubectl label installation/kyma-installation action=install
-"${KYMA_SCRIPTS_DIR}"/is-installed.sh
+#"${KYMA_SCRIPTS_DIR}"/is-installed.sh
+"${TEST_INFRA_SOURCES_DIR}"/prow/scripts/cluster-integration/is-installed.sh
 
 shout "Test Kyma"
 date
