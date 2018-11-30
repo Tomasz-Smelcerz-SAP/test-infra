@@ -36,6 +36,8 @@ presubmits: # runs on PRs
         preset-docker-push-repository: "true"
         preset-dind-enabled: "true"
       decorate: true
+      decoration_config:
+        grace_period: 1.8e+11 #three minutes
       path_alias: github.com/kyma-project/kyma
       extra_refs:
         - org: kyma-project
