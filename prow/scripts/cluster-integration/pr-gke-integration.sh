@@ -37,8 +37,9 @@ for var in REPO_OWNER REPO_NAME PULL_NUMBER DOCKER_PUSH_REPOSITORY DOCKER_PUSH_D
     fi
 done
 if [ "${discoverUnsetVar}" = true ] ; then
-    exit 1
+    echo exit 1
 fi
+
 
 trap cleanup EXIT
 
@@ -145,6 +146,52 @@ shout "Authenticate"
 date
 init
 
+################################################################################
+sigquit()
+{
+    echo "signal SIGQUIT received"
+    while /usr/bin/true ; do
+        sleep 5
+        echo "looping after SIGQUIT"
+        date
+    done
+    exit 0
+}
+
+sigint()
+{
+    echo "signal SIGINT received, script ending"
+    while /usr/bin/true ; do
+        sleep 5
+        echo "looping after SIGINT"
+        date
+    done
+    exit 0
+}
+
+sigterm()
+{
+    echo "signal SIGTERM received, script ending"
+    while /usr/bin/true ; do
+        sleep 5
+        echo "looping after SIGTERM"
+        date
+    done
+    exit 0
+}
+
+trap 'sigquit' SIGQUIT
+trap 'sigint'  SIGINT
+trap 'sigterm' SIGTERM
+
+echo "test script started. My PID is $$"
+while /usr/bin/true ; do
+    echo "tick"
+    date
+    sleep 5
+done
+
+################################################################################
 
 shout "Build Kyma-Installer Docker image"
 date
