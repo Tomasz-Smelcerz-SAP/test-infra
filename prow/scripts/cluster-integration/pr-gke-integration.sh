@@ -150,7 +150,7 @@ init
 sigquit()
 {
     echo "signal SIGQUIT received"
-    while /usr/bin/true ; do
+    while /bin/true ; do
         sleep 5
         echo "looping after SIGQUIT"
         date
@@ -161,7 +161,7 @@ sigquit()
 sigint()
 {
     echo "signal SIGINT received, script ending"
-    while /usr/bin/true ; do
+    while /bin/true ; do
         sleep 5
         echo "looping after SIGINT"
         date
@@ -172,7 +172,7 @@ sigint()
 sigterm()
 {
     echo "signal SIGTERM received, script ending"
-    while /usr/bin/true ; do
+    while /bin/true ; do
         sleep 5
         echo "looping after SIGTERM"
         date
@@ -185,7 +185,7 @@ trap 'sigint'  SIGINT
 trap 'sigterm' SIGTERM
 
 echo "test script started. My PID is $$"
-while /usr/bin/true ; do
+while /bin/true ; do
     echo "tick"
     date
     sleep 5
