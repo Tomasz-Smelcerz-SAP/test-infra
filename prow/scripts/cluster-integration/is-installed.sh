@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 VERBOSE=0
 DELAY=10
@@ -22,7 +22,12 @@ do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-trap 'echo "PADU"; exit 0' SIGINT SIGTERM
+trap stop SIGINT SIGTERM
+
+stop() {
+    echo "PADU!!!"
+    exit 1
+}
 
 echo "Checking state of kyma installation...hold on"
 while :
@@ -41,7 +46,7 @@ do
     echo "----------"
     exit 1
   else
-    echo "Status: ${STATUS}, description: ${DESC}"
+    echo "PADU Status: ${STATUS}, description: ${DESC}"
     if [ "${VERBOSE}" -eq 1 ]; then
       echo "$(kubectl get installation/kyma-installation -o yaml)"
       echo "----------"
