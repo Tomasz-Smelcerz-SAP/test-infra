@@ -20,6 +20,14 @@ type Preset string
 const (
 	// PresetDindEnabled means docker-in-docker preset
 	PresetDindEnabled Preset = "preset-dind-enabled"
+	//PresetGcComputeEnvs means gcloud zone and regions envs are set
+	PresetGcComputeEnvs = "preset-gc-compute-envs"
+	//PresetGcProjectEnv means gcloud project env is set
+	PresetGcProjectEnv = "preset-gc-project-env"
+	//PresetGkeKymaIntegration means credentials necessary to setup cluster for testing Kyma are set
+	PresetGkeKymaIntegration = "preset-sa-gke-kyma-integration"
+	//PresetVmKymaIntegration means credentials necessary to provision VM for testing Kyma are set
+	PresetVmKymaIntegration = "preset-sa-vm-kyma-integration"
 	// PresetGcrPush means GCR push service account
 	PresetGcrPush Preset = "preset-sa-gcr-push"
 	// PresetDockerPushRepo means Docker repository

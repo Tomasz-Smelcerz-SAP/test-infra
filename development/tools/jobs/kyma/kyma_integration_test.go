@@ -82,3 +82,34 @@ func TestKymaIntegrationJobPostsubmit(t *testing.T) {
 
 	assert.Equal(t, tester.ImageBootstrapHelm20181121, actualGKE.Spec.Containers[0].Image)
 }
+
+func TestKymaIntegrationJobPeriodic(t *testing.T) {
+	// WHEN
+	jobConfig, err := tester.ReadJobConfig("./../../../../prow/jobs/kyma/kyma-integration.yaml")
+	// THEN
+	require.NoError(t, err)
+
+	periodics := jobConfig.Periodics
+	assert.Len(t, periodics, 2)
+
+	serviceAccountCleanerImagePrefix := "eu.gcr.io/kyma-project/prow/cleaner:0.0."
+	serviceAccountCleaner := periodics[0]
+	require.NotNil(t, serviceAccountCleaner)
+	assert.Equal(t, "utilities-kyma-integration-cleaner", serviceAccountCleaner.Name)
+	assert.False(t, serviceAccountCleaner.Decorate)
+	assert.Equal(t, "0 7 * * 1-5", serviceAccountCleaner.Cron)
+	tester.AssertThatHasPresets(t, serviceAccountCleaner.JobBase, tester.PresetGcProjectEnv, tester.PresetVmKymaIntegration)
+	assert.Contains(t, serviceAccountCleaner.Spec.Containers[0].Image, serviceAccountCleanerImagePrefix)
+
+	disksCleanerImagePrefix := "eu.gcr.io/kyma-project/prow/buildpack-golang:0.0."
+	disksCleaner := periodics[1]
+	require.NotNil(t, disksCleaner)
+	assert.Equal(t, "orphaned-disks-cleaner", disksCleaner.Name)
+	assert.Equal(t, "0 * * * *", disksCleaner.Cron)
+	tester.AssertThatHasPresets(t, disksCleaner.JobBase, tester.PresetGcProjectEnv, tester.PresetGkeKymaIntegration)
+	assert.True(t, disksCleaner.Decorate)
+	tester.AssertThatHasExtraRefs(t, disksCleaner.JobBase.UtilityConfig, []string{"test-infra"})
+	assert.Contains(t, disksCleaner.Spec.Containers[0].Image, disksCleanerImagePrefix)
+	assert.Equal(t, []string{"bash"}, disksCleaner.Spec.Containers[0].Command)
+	assert.Equal(t, []string{"-c", "development/disks-cleanup.sh ${CLOUDSDK_CORE_PROJECT}"}, disksCleaner.Spec.Containers[0].Args)
+}
